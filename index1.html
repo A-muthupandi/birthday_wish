@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎉 Happy Birthday!</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+
+#welcomeScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #fff3cd;
+  text-align: center;
+}
+
+#welcomeScreen input {
+  padding: 10px;
+  font-size: 1rem;
+  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+
+button {
+  padding: 10px 20px;
+  background-color: #ff69b4;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff1493;
+}
+
+
+.hero {
+  text-align: center;
+  padding: 30px 20px;
+  position: relative;
+  background: linear-gradient(to bottom, #fcb69f, #ffecd2);
+  min-height: 100vh;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  text-shadow: 2px 2px #000;
+}
+
+
+.popup {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 400px;
+  margin: 20px auto;
+  display: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.popup textarea,
+.popup input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+
+#wishList {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#wishList li {
+  padding: 8px;
+  background: #fff3f3;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.gift-section {
+  text-align: center;
+  padding: 50px 20px;
+  background: #ffe4e1;
+}
+
+.gift-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.gift-box {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.gift-box:hover {
+  transform: scale(1.05);
+}
+
+.gift-box .box {
+  background: #ff69b4;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.gift-box .lid {
+  position: absolute;
+  top: -30px;
+  width: 100%;
+  height: 30px;
+  background: #ff1493;
+  border-radius: 10px 10px 0 0;
+  transition: transform 0.5s ease;
+  transform-origin: top;
+}
+
+.gift-box.open .lid {
+  transform: rotateX(120deg);
+}
+
+.gift-content {
+  margin-top: 30px;
+  text-align: center;
+  color: #333;
+  display: none;
+}
+
+.gift-content img {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+
+#wrongMessage {
+  color: red;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+
+.quote-section {
+  background: #fffaf0;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 1.2rem;
+}
+
+.quote-section blockquote {
+  font-style: italic;
+  color: #555;
+  max-width: 600px;
+  margin: auto;
+  line-height: 1.6;
+}
+
+
+.gallery {
+  padding: 40px 20px;
+  background: #f9f9f9;
+  text-align: center;
+}
+
+.gallery h2 {
+  margin-bottom: 20px;
+}
+
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.gallery-grid img {
+  border-radius: 10px;
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.gallery-grid img:hover {
+  transform: scale(1.05);
+}
+
+.info-section {
+  background: #ffe4e1;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.info-section ul {
+  list-style: none;
+  padding: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.info-section li {
+  margin: 10px 0;
+}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  
+  <div id="welcomeScreen">
+    <h2>Who's birthday is it today?</h2>
+    <input type="text" id="nameInput" placeholder="Enter the name" />
+    <button onclick="startCelebration()">Start Celebration 🎉</button>
+  </div>
+
+  
+  <div class="hero" id="mainPage" style="display:none;">
+    <canvas id="confettiCanvas"></canvas>
+
+    
+    <div class="content">
+      <h1 id="birthdayTitle">🎂 Happy Birthday!</h1>
+      <p id="countdown"></p>
+      <button onclick="toggleRSVP()">📬 RSVP</button>
+      <button onclick="toggleWishes()">💌 Leave a Wish</button>
+    </div>
+
+    
+    <div class="popup" id="rsvpForm">
+      <h3>RSVP for the Party</h3>
+      <input type="text" id="guestName" placeholder="Your Name">
+      <button onclick="saveRSVP()">Submit</button>
+    </div>
+
+    
+    <div class="popup" id="wishWall">
+      <h3>Leave a Wish</h3>
+      <textarea id="wishInput" placeholder="Write your birthday wish..."></textarea>
+      <button onclick="saveWish()">Send</button>
+      <ul id="wishList"></ul>
+    </div>
+
+    
+    <div class="gift-section">
+      <h2>🎁 Choose the Right Gift to Reveal Your Surprise!</h2>
+      <div class="gift-grid">
+        <div class="gift-box" onclick="checkGift(0)">
+          <div class="lid"></div>
+          <div class="box"></div>
+        </div>
+        <div class="gift-box" onclick="checkGift(1)">
+          <div class="lid"></div>
+          <div class="box"></div>
+        </div>
+        <div class="gift-box" onclick="checkGift(2)">
+          <div class="lid"></div>
+          <div class="box"></div>
+        </div>
+      </div>
+
+      
+      <div id="giftContent" class="gift-content hidden">
+        <h3>🎉 Surprise! 🎉</h3>
+        <p>You found the real gift! Enjoy your special day!</p>
+        <img src="m2.jpg" alt="Surprise Gift" />
+      </div>
+
+      
+      <div id="wrongMessage" class="gift-content hidden">
+        <p>❌ Oops! Try another gift!</p>
+      </div>
+    </div>
+
+    
+    <section class="quote-section">
+      <h2>💫 A Special Birthday Message</h2>
+      <blockquote>
+        "Count your life by smiles, not tears. Count your age by friends, not years. Happy Birthday!"
+      </blockquote>
+    </section>
+
+    
+    <section class="gallery">
+      <h2>📸Memories</h2>
+      <div class="gallery-grid">
+        <img src="k1.jpg" />
+        <img src="k2.jpg" />
+        <img src="k3.jpg" />
+        <img src="k4.jpg" />
+      </div>
+    </section>
+
+    
+    <section class="info-section">
+      <h2>📍 Party Info</h2>
+      <ul>
+        <li><strong>Date:</strong> July 14, 2025</li>
+        <li><strong>Time:</strong> 6:00 PM</li>
+        <li><strong>Location:</strong> Mysore Palace, Sayyaji Rao Rd, Mysuru, Karnataka 570001</li>
+        <li><strong>Dress Code:</strong> Black & White 🎀</li>
+      </ul>
+    </section>
+
+  </div>
+</body>
+<script>
+    function startCelebration() {
+  const name = document.getElementById("nameInput").value.trim();
+  if (name) {
+    document.getElementById("birthdayTitle").textContent = `🎂 Happy Birthday, ${name}! 🎂`;
+    document.getElementById("welcomeScreen").style.display = "none";
+    document.getElementById("mainPage").style.display = "block";
+    launchConfetti();
+  } else {
+    alert("Please enter a name!");
+  }
+}
+
+function toggleRSVP() {
+  const form = document.getElementById("rsvpForm");
+  form.style.display = form.style.display === "block" ? "none" : "block";
+}
+
+function toggleWishes() {
+  const form = document.getElementById("wishWall");
+  form.style.display = form.style.display === "block" ? "none" : "block";
+}
+
+function saveRSVP() {
+  const name = document.getElementById("guestName").value.trim();
+  if (name) {
+    alert(`Thanks for RSVPing, ${name}!`);
+    document.getElementById("rsvpForm").style.display = "none";
+  } else {
+    alert("Please enter your name!");
+  }
+}
+
+function saveWish() {
+  const wishText = document.getElementById("wishInput").value.trim();
+  if (wishText) {
+    const li = document.createElement("li");
+    li.textContent = wishText;
+    document.getElementById("wishList").appendChild(li);
+    document.getElementById("wishInput").value = "";
+  } else {
+    alert("Please enter a wish!");
+  }
+}
+
+let correctGiftIndex = Math.floor(Math.random() * 3);
+
+function checkGift(index) {
+  const giftBoxes = document.querySelectorAll('.gift-box');
+
+  giftBoxes.forEach((box, i) => {
+    box.classList.remove("open");
+    if (i === index) {
+      box.classList.add("open");
+    }
+  });
+
+  const giftContent = document.getElementById("giftContent");
+  const wrongMessage = document.getElementById("wrongMessage");
+
+  if (index === correctGiftIndex) {
+    giftContent.classList.remove("hidden");
+    wrongMessage.classList.add("hidden");
+    launchConfetti();
+  } else {
+    giftContent.classList.add("hidden");
+    wrongMessage.classList.remove("hidden");
+  }
+}
+
+
+function launchConfetti() {
+  confetti({
+    particleCount: 150,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+}
+</script>
+</html>
